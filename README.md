@@ -38,3 +38,5 @@ The backend seeds a high-quality initial set of TNPSC polity questions on startu
 - Current affairs dashboard
 - AI analytics
 
+
+Project Status: Feature A version
