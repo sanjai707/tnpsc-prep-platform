@@ -32,3 +32,9 @@ A premium mobile-first TNPSC preparation platform focused on daily practice, str
 
 The backend seeds a high-quality initial set of TNPSC polity questions on startup using `import.sql`.
 
+## Upcoming Features
+
+- Mock tests
+- Current affairs dashboard
+- AI analytics
+
