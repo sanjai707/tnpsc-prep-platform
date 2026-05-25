@@ -1,0 +1,27 @@
+# Java
+*.class
+*.jar
+*.war
+*.iml
+.gradle
+/build
+/target
+/backend/target
+/backend/tools
+
+# Node
+node_modules
+dist
+.env
+
+# Archives
+*.zip
+
+# VS Code
+.vscode
+
+# Logs
+*.log
+
+# Mac
+.DS_Store

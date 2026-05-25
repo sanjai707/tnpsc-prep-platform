@@ -1,0 +1,9 @@
+{
+  "name": "TNPSC Pulse",
+  "short_name": "TNPSC",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090b11",
+  "theme_color": "#111827",
+  "description": "Premium Tamil Nadu PSC daily practice app."
+}

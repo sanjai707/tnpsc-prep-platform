@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    allow-circular-references: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tnpsc_app
+    username: tnpsc_user
+    password: tnpsc_password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  sql:
+    init:
+      mode: always
+
+jwt:
+  secret: my-super-secret-key-that-is-at-least-256-bits-long-for-hs256-algorithm-signing
+  expiration-ms: 86400000
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: INFO
