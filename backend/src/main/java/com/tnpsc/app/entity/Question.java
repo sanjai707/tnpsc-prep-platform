@@ -1,6 +1,11 @@
 package com.tnpsc.app.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "questions")
@@ -12,49 +17,53 @@ public class Question {
 
     private String topic;
 
-    @Column(columnDefinition = "text")
+    private String subject;
+
+    @Column(name = "question_en", columnDefinition = "text")
     private String questionEn;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "question_ta", columnDefinition = "text")
     private String questionTa;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "option_a_en", columnDefinition = "text")
     private String optionAEn;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "option_a_ta", columnDefinition = "text")
     private String optionATa;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "option_b_en", columnDefinition = "text")
     private String optionBEn;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "option_b_ta", columnDefinition = "text")
     private String optionBTa;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "option_c_en", columnDefinition = "text")
     private String optionCEn;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "option_c_ta", columnDefinition = "text")
     private String optionCTa;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "option_d_en", columnDefinition = "text")
     private String optionDEn;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "option_d_ta", columnDefinition = "text")
     private String optionDTa;
 
+    @Column(name = "correct_answer")
     private String correctAnswer;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "explanation_en", columnDefinition = "text")
     private String explanationEn;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "explanation_ta", columnDefinition = "text")
     private String explanationTa;
 
     public Question() {
     }
 
-    public Question(String topic, String questionEn, String questionTa, String optionAEn, String optionATa, String optionBEn, String optionBTa, String optionCEn, String optionCTa, String optionDEn, String optionDTa, String correctAnswer, String explanationEn, String explanationTa) {
+    public Question(String topic, String subject, String questionEn, String questionTa, String optionAEn, String optionATa, String optionBEn, String optionBTa, String optionCEn, String optionCTa, String optionDEn, String optionDTa, String correctAnswer, String explanationEn, String explanationTa) {
         this.topic = topic;
+        this.subject = subject;
         this.questionEn = questionEn;
         this.questionTa = questionTa;
         this.optionAEn = optionAEn;
@@ -84,6 +93,14 @@ public class Question {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public String getQuestionEn() {

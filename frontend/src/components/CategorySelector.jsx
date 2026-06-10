@@ -5,7 +5,7 @@ const CATEGORIES = [
   'History',
   'Geography',
   'Science',
-  'Economy',
+  'Economics',
   'Current Affairs',
   'Mixed Practice',
 ];

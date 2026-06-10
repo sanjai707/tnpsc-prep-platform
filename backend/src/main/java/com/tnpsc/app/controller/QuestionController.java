@@ -28,11 +28,26 @@ public class QuestionController {
     }
 
     @GetMapping("/daily")
-public ResponseEntity<List<QuestionDto>> getDailyQuestions(
-        @RequestParam(required = false) List<String> topics
-) {
-    return ResponseEntity.ok(questionService.findDailyQuestions(topics));
-}
+    public ResponseEntity<List<QuestionDto>> getDailyQuestions(
+            @RequestParam(required = false, name = "topics") String topicsCsv,
+            @RequestParam(defaultValue = "10", name = "count") int count,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        List<String> topics = null;
+        if (topicsCsv != null && !topicsCsv.isBlank()) {
+            topics = java.util.Arrays.stream(topicsCsv.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .toList();
+        }
+        System.out.println("Selected Topics (raw): " + topicsCsv);
+        System.out.println("Selected Topics (parsed): " + topics);
+        String userEmail = userDetails != null ? userDetails.getUsername() : null;
+        List<QuestionDto> questions = questionService.findDailyQuestions(topics, count, userEmail);
+        System.out.println("Questions Returned: " + questions.size());
+        questions.forEach(q -> System.out.println("Returned Topic = " + q.getTopic() + " subject=" + q.getSubject()));
+        return ResponseEntity.ok(questions);
+    }
 
     @PostMapping("/submit")
     public ResponseEntity<AnswerResultDto> submitAnswer(@AuthenticationPrincipal UserDetails userDetails,

@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import QuestionPage from './pages/QuestionPage';
+import DailyInsightsPage from './pages/DailyInsightsPage';
 import ResultPage from './pages/ResultPage';
 import StatsPage from './pages/StatsPage';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -23,6 +24,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route path="/practice" element={<ProtectedRoute><QuestionPage /></ProtectedRoute>} />
+            <Route path="/insights" element={<ProtectedRoute><DailyInsightsPage /></ProtectedRoute>} />
             <Route path="/result" element={<ProtectedRoute><ResultPage /></ProtectedRoute>} />
             <Route path="/stats" element={<ProtectedRoute><StatsPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />

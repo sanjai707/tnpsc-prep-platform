@@ -1,9 +1,19 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchDailyQuestions, submitAnswer } from '../api/questionService';
 import { useLanguage } from '../hooks/useLanguage';
 import CategorySelector from '../components/CategorySelector';
 import ExplanationCard from '../components/ExplanationCard';
+
+const CATEGORY_TOPICS = {
+  'Indian Polity': ['Indian Polity', 'Polity', 'Fundamental Rights', 'Constitutional Amendments', 'Emergency Provisions', 'President', 'Judiciary', 'Parliament', 'DPSP'],
+  History: ['History', 'Indian History'],
+  Geography: ['Geography'],
+  Science: ['Science'],
+  Economics: ['Economics'],
+  'Current Affairs': ['Current Affairs'],
+  'Mixed Practice': [],
+};
 
 const QuestionPage = () => {
   const [questions, setQuestions] = useState([]);
@@ -13,28 +23,36 @@ const QuestionPage = () => {
   const [answerResult, setAnswerResult] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [summary, setSummary] = useState({ correct: 0, answered: 0 });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sessionStarted, setSessionStarted] = useState(false);
   const navigate = useNavigate();
   const lang = useLanguage();
 
-  useEffect(() => {
-    async function loadQuestions() {
-      try {
-        const data = await fetchDailyQuestions();
-        setQuestions(data);
-      } catch (err) {
-        setError('Unable to load practice questions right now.');
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadQuestions();
-  }, []);
-
   const currentQuestion = questions[index];
   const answeredCount = index;
+
+  const mapSelectedCategoriesToTopics = (selected) => {
+    const mapped = selected.flatMap((category) => {
+      const topics = CATEGORY_TOPICS[category];
+      return topics && topics.length > 0 ? topics : [category];
+    });
+    return mapped.length > 0 ? Array.from(new Set(mapped)) : ['Mixed Practice'];
+  };
+
+  const loadPracticeQuestions = async (topics) => {
+    setError('');
+    setLoading(true);
+    try {
+      const data = await fetchDailyQuestions(topics);
+      setQuestions(data);
+      setIndex(0);
+    } catch (err) {
+      setError('Unable to load practice questions right now.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const options = useMemo(() => {
     if (!currentQuestion) return [];
@@ -46,34 +64,6 @@ const QuestionPage = () => {
     ];
   }, [currentQuestion, lang]);
 
-  const filteredQuestions = useMemo(() => {
-    if (!questions || questions.length === 0) return [];
-    // If no categories selected, return full list
-    if (!sessionStarted) return [];
-    if (selectedCategories.length === 0) return questions;
-    if (selectedCategories.includes('Mixed Practice')) return questions;
-    return questions.filter((q) => selectedCategories.includes(q.category));
-  }, [questions, selectedCategories, sessionStarted]);
-
-  // create mixed difficulty ordering
-  useEffect(() => {
-    if (!filteredQuestions || filteredQuestions.length === 0) return;
-    // balance difficulties: easy/medium/hard mix
-    const easy = filteredQuestions.filter((q) => q.difficulty === 'easy');
-    const med = filteredQuestions.filter((q) => q.difficulty === 'medium');
-    const hard = filteredQuestions.filter((q) => q.difficulty === 'hard');
-
-    const mixed = [];
-    // simple round-robin taking proportions
-    const maxLen = Math.max(easy.length, med.length, hard.length);
-    for (let i = 0; i < maxLen; i++) {
-      if (easy[i]) mixed.push(easy[i]);
-      if (med[i]) mixed.push(med[i]);
-      if (hard[i]) mixed.push(hard[i]);
-    }
-    setQuestions(mixed);
-    setIndex(0);
-  }, [filteredQuestions]);
 
   const handleSelection = async (value) => {
     if (!currentQuestion || selected) return;
@@ -120,9 +110,9 @@ const QuestionPage = () => {
         <div style={{ marginTop: 16 }}>
           <button
             className="primary-button"
-            onClick={() => {
-              // default to Mixed Practice if nothing selected
-              if (selectedCategories.length === 0) setSelectedCategories(['Mixed Practice']);
+            onClick={async () => {
+              const topics = selectedCategories.length === 0 ? ['Mixed Practice'] : mapSelectedCategoriesToTopics(selectedCategories);
+              await loadPracticeQuestions(topics);
               setSessionStarted(true);
             }}
           >

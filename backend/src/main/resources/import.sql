@@ -87,3 +87,11 @@ INSERT INTO questions (topic, question_en, question_ta, option_a_en, option_a_ta
 ('Indian Polity', 'Which article defines the powers of the Finance Commission?', 'நிதி ஆணையத்தின் அதிகாரத்தை எந்த கட்டுரை வரையறுக்கிறது?', 'Article 280', 'கட்டுரை 280', 'Article 294', 'கட்டுரை 294', 'Article 150', 'கட்டுரை 150', 'Article 145', 'கட்டுரை 145', 'A', 'Article 280 defines the Finance Commission''s powers and functions.', 'கட்டுரை 280 நிதி ஆணையத்தின் அதிகாரங்கள் மற்றும் செயல்பாடுகளை வரையறுக்கிறது.'),
 ('Indian Polity', 'What is the role of the Prime Minister in the Council of Ministers?', 'மந்திரிமன்றத்தில் பிரதமரின் பங்கு என்ன?', 'Heads executive decisions', 'நிர்வாக முடிவுகளை தலைவராக', 'Presides over Cabinet meetings', 'மந்திரிக்குழு கூட்டங்களை தலைமையிட', 'Signs bills into law', 'சட்டமாக bills க்கு கையொப்பம் வைக்க', 'Advises the President', 'ஜனாதிபருக்கு ஆலோசனை தர', 'D', 'The Prime Minister advises the President and leads the Council of Ministers.', 'பிரதமர் ஜனாதிபருக்கு ஆலோசனை அளித்து மந்திரிமன்றத்தை வழிநடத்துகிறார்.'),
 ('Indian Polity', 'Which article gives Parliament power to make laws for whole or any part of India?', 'முழு அல்லது எந்த பகுதியின் இந்தியாவிற்கும் சட்டம் செய்ய Parlamento எந்த கட்டுரை அதிகாரமளிக்கிறது?', 'Article 245', 'கட்டுரை 245', 'Article 246', 'கட்டுரை 246', 'Article 247', 'கட்டுரை 247', 'Article 248', 'கட்டுரை 248', 'A', 'Article 245 grants Parliament power to make laws for the territory of India.', 'கட்டுரை 245 இந்தியா வெளியூராக சட்டம் செய்ய Parlamento ஐ அதிகாரமளிக்கிறது.');
+
+-- Populate subject metadata for imported questions
+UPDATE questions SET subject = 'Polity' WHERE topic IN ('Indian Polity', 'Fundamental Rights', 'Parliament');
+UPDATE questions SET subject = 'History' WHERE topic IN ('Ancient History', 'Medieval History', 'Modern History');
+UPDATE questions SET subject = 'Science' WHERE topic IN ('Physics', 'Biology');
+UPDATE questions SET subject = 'Economics' WHERE topic = 'Economics';
+UPDATE questions SET subject = 'Current Affairs' WHERE topic = 'Current Affairs';
+UPDATE questions SET subject = 'General' WHERE subject IS NULL;

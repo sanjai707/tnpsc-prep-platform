@@ -3,6 +3,8 @@ package com.tnpsc.app.dto;
 public class QuestionDto {
     private Long id;
     private String topic;
+    private String subject;
+    private String category;
     private String questionEn;
     private String questionTa;
     private String optionAEn;
@@ -28,6 +30,22 @@ public class QuestionDto {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getQuestionEn() {

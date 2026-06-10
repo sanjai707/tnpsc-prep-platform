@@ -398,6 +398,53 @@ a {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Daily Insights */
+.daily-insights-page h1 {
+  margin: 0 0 6px;
+}
+.daily-insights-page .muted {
+  color: #b5bdd6;
+  margin-bottom: 18px;
+}
+.insights-list {
+  display: grid;
+  gap: 16px;
+}
+.insight-card {
+  padding: 20px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.insight-card__topic {
+  color: #8fa9ff;
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+}
+.insight-card__title {
+  margin: 0 0 12px;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.insight-card__explanation {
+  color: #e6eefc;
+  margin-bottom: 12px;
+}
+.insight-card__tip {
+  color: #f3e9b9;
+}
+.insight-card__mini {
+  color: #b4bacf;
+  font-size: 0.95rem;
+}
+
+@media (min-width: 720px) {
+  .insights-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
 .header-shell .brand {
   font-size: 1.1rem;
   letter-spacing: 0.1em;

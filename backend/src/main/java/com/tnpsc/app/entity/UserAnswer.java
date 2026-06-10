@@ -1,7 +1,15 @@
 package com.tnpsc.app.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "user_answers")
@@ -19,20 +27,26 @@ public class UserAnswer {
     @JoinColumn(name = "question_id")
     private Question question;
 
+    private String subject;
+
     private String selectedAnswer;
 
     private Boolean isCorrect;
+
+    private LocalDateTime attemptedAt;
 
     private LocalDateTime answeredAt;
 
     public UserAnswer() {
     }
 
-    public UserAnswer(User user, Question question, String selectedAnswer, Boolean isCorrect, LocalDateTime answeredAt) {
+    public UserAnswer(User user, Question question, String subject, String selectedAnswer, Boolean isCorrect, LocalDateTime attemptedAt, LocalDateTime answeredAt) {
         this.user = user;
         this.question = question;
+        this.subject = subject;
         this.selectedAnswer = selectedAnswer;
         this.isCorrect = isCorrect;
+        this.attemptedAt = attemptedAt;
         this.answeredAt = answeredAt;
     }
 
@@ -76,11 +90,27 @@ public class UserAnswer {
         this.isCorrect = isCorrect;
     }
 
+    public LocalDateTime getAttemptedAt() {
+        return attemptedAt;
+    }
+
+    public void setAttemptedAt(LocalDateTime attemptedAt) {
+        this.attemptedAt = attemptedAt;
+    }
+
     public LocalDateTime getAnsweredAt() {
         return answeredAt;
     }
 
     public void setAnsweredAt(LocalDateTime answeredAt) {
         this.answeredAt = answeredAt;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 }
