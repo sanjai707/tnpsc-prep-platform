@@ -12,6 +12,10 @@ public class DailyInsightDto {
 
     private String miniQuiz;
 
+    private Double priorityScore;
+
+    private String weaknessLevel;
+
     public String getTopic() {
         return topic;
     }
@@ -50,5 +54,21 @@ public class DailyInsightDto {
 
     public void setMiniQuiz(String miniQuiz) {
         this.miniQuiz = miniQuiz;
+    }
+
+    public Double getPriorityScore() {
+        return priorityScore;
+    }
+
+    public void setPriorityScore(Double priorityScore) {
+        this.priorityScore = priorityScore;
+    }
+
+    public String getWeaknessLevel() {
+        return weaknessLevel;
+    }
+
+    public void setWeaknessLevel(String weaknessLevel) {
+        this.weaknessLevel = weaknessLevel;
     }
 }

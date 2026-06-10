@@ -2,6 +2,7 @@ package com.tnpsc.app.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,6 +40,16 @@ public class QuestionService {
             "Aptitude", 10
     );
 
+    private static final Map<String, Integer> EXAM_IMPORTANCE_MAP = Map.of(
+            "Polity", 10,
+            "Current Affairs", 10,
+            "History", 8,
+            "Geography", 7,
+            "Science", 7,
+            "Economics", 6,
+            "General", 5
+    );
+
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
     private final UserAnswerRepository userAnswerRepository;
@@ -50,13 +61,74 @@ public class QuestionService {
     }
 
     public List<DailyInsightDto> getDailyInsights() {
+        return getDailyInsights(null);
+    }
+
+    public List<DailyInsightDto> getDailyInsights(String userEmail) {
+        System.out.println("===== DEBUG SERVICE =====");
+        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: getDailyInsights called");
+        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: userEmail = " + userEmail);
+        System.out.println("================================");
+        System.out.println("INSIGHTS CALLED");
+        System.out.println("USER EMAIL = " + userEmail);
+        System.out.println("================================");
+
+        if (userEmail == null || userEmail.isBlank()) {
+            return getFallbackDailyInsights();
+        }
+
+        User user = userRepository.findByEmail(userEmail).orElse(null);
+        if (user == null) {
+            return getFallbackDailyInsights();
+        }
+
+        Map<String, TopicPerformance> performanceByTopic = buildPerformanceMap(user);
+        Map<String, LocalDateTime> lastAttemptByTopic = buildLastAttemptMap(user);
+        List<TopicScore> topicScores = SubjectMapper.getAllTopics().stream()
+                .map(topic -> buildTopicScore(topic, performanceByTopic, lastAttemptByTopic))
+                .sorted(Comparator.comparingDouble(TopicScore::getPriorityScore).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+
+        List<DailyInsightDto> insights = new ArrayList<>();
+        for (TopicScore score : topicScores) {
+            List<Question> questions = questionRepository.findQuestionsByTopics(List.of(score.getTopic()), 1);
+            if (questions == null || questions.isEmpty()) {
+                continue;
+            }
+            Question question = questions.get(0);
+            DailyInsightDto dto = new DailyInsightDto();
+            dto.setTopic(question.getTopic());
+            dto.setTitle(question.getQuestionEn() != null ? question.getQuestionEn() : "");
+            dto.setExplanation(question.getExplanationEn());
+            dto.setTnpscTip(null);
+            dto.setMiniQuiz(question.getQuestionEn());
+            dto.setPriorityScore(score.getPriorityScore());
+            dto.setWeaknessLevel(computeWeaknessLevel(score.getWeaknessScore()));
+            System.out.println(
+    "DEBUG -> " +
+    score.getTopic() +
+    " priority=" +
+    score.getPriorityScore() +
+    " weakness=" +
+    computeWeaknessLevel(score.getWeaknessScore())
+);
+            insights.add(dto);
+        }
+
+        if (insights.isEmpty()) {
+            return getFallbackDailyInsights();
+        }
+        return insights;
+    }
+
+    private List<DailyInsightDto> getFallbackDailyInsights() {
         int count = new java.util.Random().nextInt(3) + 3; // 3,4,5
         List<Question> questions = questionRepository.findRandomQuestions(count);
         if (questions == null || questions.isEmpty()) {
             return java.util.Collections.emptyList();
         }
-        List<Question> picked = questions.stream().limit(count).toList();
-        return picked.stream().map(q -> {
+        return questions.stream().limit(count).map(q -> {
             DailyInsightDto dto = new DailyInsightDto();
             dto.setTopic(q.getTopic());
             String title = q.getQuestionEn();
@@ -75,6 +147,70 @@ public class QuestionService {
             dto.setMiniQuiz(q.getQuestionEn());
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    private Map<String, TopicPerformance> buildPerformanceMap(User user) {
+        Map<String, TopicPerformance> performanceMap = new LinkedHashMap<>();
+        for (Object[] row : userAnswerRepository.aggregateTopicPerformance(user)) {
+            if (row == null || row.length < 3) {
+                continue;
+            }
+            String topic = (String) row[0];
+            Number correctCount = (Number) row[1];
+            Number totalCount = (Number) row[2];
+            if (topic == null || totalCount == null || totalCount.intValue() == 0) {
+                continue;
+            }
+            double accuracy = correctCount == null ? 0.0 : (correctCount.doubleValue() * 100.0 / totalCount.doubleValue());
+            performanceMap.put(topic, new TopicPerformance(accuracy, totalCount.intValue()));
+        }
+        return performanceMap;
+    }
+
+    private Map<String, LocalDateTime> buildLastAttemptMap(User user) {
+        Map<String, LocalDateTime> lastAttemptMap = new LinkedHashMap<>();
+        for (Object[] row : userAnswerRepository.findLastAttemptedPerTopic(user)) {
+            if (row == null || row.length < 2) {
+                continue;
+            }
+            String topic = (String) row[0];
+            LocalDateTime attemptedAt = (LocalDateTime) row[1];
+            if (topic != null && attemptedAt != null) {
+                lastAttemptMap.put(topic, attemptedAt);
+            }
+        }
+        return lastAttemptMap;
+    }
+
+    private TopicScore buildTopicScore(String topic, Map<String, TopicPerformance> performanceByTopic, Map<String, LocalDateTime> lastAttemptByTopic) {
+        TopicPerformance performance = performanceByTopic.get(topic);
+        boolean attempted = performance != null;
+        double weaknessScore = attempted ? (100.0 - performance.getAccuracy()) : 50.0;
+        long daysSinceRevision = calculateDaysSinceRevision(lastAttemptByTopic.get(topic));
+        int examImportance = EXAM_IMPORTANCE_MAP.getOrDefault(SubjectMapper.getSubject(topic), 5);
+        double priorityScore = weaknessScore + (daysSinceRevision * 2.0) + examImportance;
+        return new TopicScore(topic, priorityScore, weaknessScore, daysSinceRevision);
+    }
+
+    private long calculateDaysSinceRevision(LocalDateTime lastAttemptedAt) {
+        if (lastAttemptedAt == null) {
+            return 30;
+        }
+        long days = ChronoUnit.DAYS.between(lastAttemptedAt.toLocalDate(), LocalDate.now());
+        if (days < 0) {
+            days = 0;
+        }
+        return Math.min(days, 30);
+    }
+
+    private String computeWeaknessLevel(double weaknessScore) {
+        if (weaknessScore >= 70.0) {
+            return "HIGH";
+        }
+        if (weaknessScore >= 40.0) {
+            return "MEDIUM";
+        }
+        return "LOW";
     }
 
     public List<QuestionDto> findDailyQuestions(List<String> topics, int count, String userEmail) {
@@ -272,6 +408,50 @@ public class QuestionService {
         dto.setOptionDEn(question.getOptionDEn());
         dto.setOptionDTa(question.getOptionDTa());
         return dto;
+    }
+
+    private static class TopicPerformance {
+        private final double accuracy;
+        private final int totalCount;
+
+        public TopicPerformance(double accuracy, int totalCount) {
+            this.accuracy = accuracy;
+            this.totalCount = totalCount;
+        }
+
+        public double getAccuracy() {
+            return accuracy;
+        }
+
+        public int getTotalCount() {
+            return totalCount;
+        }
+    }
+
+    private static class TopicScore {
+        private final String topic;
+        private final double priorityScore;
+        private final double weaknessScore;
+        private final long daysSinceRevision;
+
+        public TopicScore(String topic, double priorityScore, double weaknessScore, long daysSinceRevision) {
+            this.topic = topic;
+            this.priorityScore = priorityScore;
+            this.weaknessScore = weaknessScore;
+            this.daysSinceRevision = daysSinceRevision;
+        }
+
+        public String getTopic() {
+            return topic;
+        }
+
+        public double getPriorityScore() {
+            return priorityScore;
+        }
+
+        public double getWeaknessScore() {
+            return weaknessScore;
+        }
     }
 
     private static class SubjectRemainder {

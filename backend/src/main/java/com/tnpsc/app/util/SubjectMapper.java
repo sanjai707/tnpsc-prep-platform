@@ -39,4 +39,8 @@ public class SubjectMapper {
         }
         return SUBJECT_TO_TOPICS.getOrDefault(subject.trim(), List.of());
     }
+
+    public static List<String> getAllTopics() {
+        return List.copyOf(TOPIC_TO_SUBJECT.keySet());
+    }
 }

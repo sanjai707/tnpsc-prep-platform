@@ -27,7 +27,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("===== DEBUG JWT FILTER =====");
+        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: Request URL = " + request.getRequestURI());
         String header = request.getHeader("Authorization");
+        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: Authorization header present = " + (header != null));
+        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: Authorization header value = " + (header == null ? "NULL" : header.startsWith("Bearer ") ? "Bearer ****" : header));
         String token = null;
         String email = null;
         if (header != null && header.startsWith("Bearer ")) {
@@ -36,11 +40,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 email = jwtUtils.getUsernameFromJwt(token);
             }
         }
+        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: token present = " + (token != null));
+        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: extracted email = " + email);
+        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: SecurityContext auth before = " + SecurityContextHolder.getContext().getAuthentication());
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = authService.loadUserByUsername(email);
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(auth);
+            System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: SecurityContext auth after = " + SecurityContextHolder.getContext().getAuthentication());
         }
         filterChain.doFilter(request, response);
     }

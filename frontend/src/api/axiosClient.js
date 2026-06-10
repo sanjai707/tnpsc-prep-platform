@@ -7,6 +7,20 @@ const api = axios.create({
   },
 });
 
+api.interceptors.request.use((config) => {
+  const authHeader = config.headers?.Authorization;
+  const hasAuth = !!authHeader;
+  const tokenSnippet = authHeader ? authHeader.replace(/^Bearer\s+/, '').slice(0, 20) : null;
+  console.log('DEBUG ONLY - REMOVE AFTER INVESTIGATION: axios outgoing request', {
+    method: config.method,
+    url: config.url,
+    baseURL: config.baseURL,
+    authHeaderPresent: hasAuth,
+    tokenSnippet: tokenSnippet ? `${tokenSnippet}...` : null,
+  });
+  return config;
+});
+
 let authToken = window.localStorage.getItem('tnpsc_token') || null;
 
 export const setAuthToken = (token) => {
