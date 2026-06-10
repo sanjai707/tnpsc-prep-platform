@@ -13,6 +13,10 @@ const InsightCard = ({ insight }) => {
           <p className="insight-card__tip"><strong>TNPSC Tip:</strong> {insight.tnpscTip}</p>
         )}
       </section>
+      <footer className="insight-card__meta">
+  <p>Priority: {insight.priorityScore?.toFixed(1)}</p>
+  <p>Weakness: {insight.weaknessLevel}</p>
+</footer>
       <footer className="insight-card__quiz">
         <p className="insight-card__mini">Mini quiz: <em>{insight.miniQuiz}</em></p>
       </footer>

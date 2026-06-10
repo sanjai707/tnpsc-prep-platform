@@ -7,10 +7,7 @@ export const fetchDailyQuestions = async (topics = []) => {
     params.topics = topics.join(',');
   }
   const url = '/questions/daily';
-  console.log('DEBUG ONLY - TEMPORARY CHANGE: fetchDailyQuestions called');
-  console.log('DEBUG ONLY - TEMPORARY CHANGE: Request URL =', url, 'params =', params);
   const response = await api.get(url, { params });
-  console.log('DEBUG ONLY - TEMPORARY CHANGE: Response =', response.data);
   return response.data;
 };
 
@@ -21,9 +18,6 @@ export const submitAnswer = async (payload) => {
 
 export const fetchDailyInsights = async () => {
   const url = '/insights/today';
-  console.log('DEBUG ONLY - TEMPORARY CHANGE: fetchDailyInsights called');
-  console.log('DEBUG ONLY - TEMPORARY CHANGE: Request URL =', url);
   const response = await api.get(url);
-  console.log('DEBUG ONLY - TEMPORARY CHANGE: Response =', response.data);
   return response.data;
 };

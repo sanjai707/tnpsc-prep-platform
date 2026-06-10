@@ -65,14 +65,6 @@ public class QuestionService {
     }
 
     public List<DailyInsightDto> getDailyInsights(String userEmail) {
-        System.out.println("===== DEBUG SERVICE =====");
-        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: getDailyInsights called");
-        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: userEmail = " + userEmail);
-        System.out.println("================================");
-        System.out.println("INSIGHTS CALLED");
-        System.out.println("USER EMAIL = " + userEmail);
-        System.out.println("================================");
-
         if (userEmail == null || userEmail.isBlank()) {
             return getFallbackDailyInsights();
         }

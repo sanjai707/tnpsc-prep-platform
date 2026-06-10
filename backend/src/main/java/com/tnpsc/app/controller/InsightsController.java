@@ -24,9 +24,6 @@ public class InsightsController {
 
     @GetMapping("/today")
     public ResponseEntity<List<DailyInsightDto>> getTodayInsights(@AuthenticationPrincipal UserDetails userDetails) {
-        System.out.println("===== DEBUG INSIGHTS =====");
-        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: UserDetails = " + userDetails);
-        System.out.println("DEBUG ONLY - REMOVE AFTER INVESTIGATION: Username = " + (userDetails != null ? userDetails.getUsername() : "NULL"));
         String userEmail = userDetails != null ? userDetails.getUsername() : null;
         List<DailyInsightDto> list = questionService.getDailyInsights(userEmail);
         return ResponseEntity.ok(list);

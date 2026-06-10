@@ -62,7 +62,12 @@ const HomePage = () => {
           <p>{lang === 'en' ? 'Ready for a focused sprint?' : 'கவனமான பயிற்சிக்கு தயாரா?'}</p>
         </div>
         <div className="story-actions">
-          <button className="secondary-button" onClick={() => navigate('/stats')}>{lang === 'en' ? 'Study insights' : 'பகுப்பாய்வு'} </button>
+          <button
+            className="secondary-button"
+            onClick={() => navigate('/insights')}
+          >
+            {lang === 'en' ? 'Study insights' : 'பகுப்பாய்வு'}
+          </button>
           <button className="primary-button" onClick={() => navigate('/practice')}>{lang === 'en' ? 'Daily session' : 'தினசரி அமர்வு'}</button>
         </div>
       </div>

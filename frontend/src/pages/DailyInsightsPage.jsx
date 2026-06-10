@@ -3,21 +3,17 @@ import { fetchDailyInsights } from '../api/questionService';
 import InsightCard from '../components/InsightCard';
 
 const DailyInsightsPage = () => {
-  console.log('DEBUG ONLY - REMOVE AFTER INVESTIGATION: DailyInsightsPage render');
   const [insights, setInsights] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    console.log('DEBUG ONLY - REMOVE AFTER INVESTIGATION: DailyInsightsPage useEffect mounted');
-    console.log('DEBUG ONLY - REMOVE AFTER INVESTIGATION: fetchDailyInsights() about to execute');
     fetchDailyInsights()
       .then(data => {
-        console.log('DEBUG ONLY - REMOVE AFTER INVESTIGATION: DailyInsightsPage received data', data);
         if (mounted) setInsights(data);
       })
       .catch(err => {
-        console.error('DEBUG ONLY - REMOVE AFTER INVESTIGATION: DailyInsightsPage fetch error', err);
+        console.error(err);
       })
       .finally(() => mounted && setLoading(false));
     return () => (mounted = false);
