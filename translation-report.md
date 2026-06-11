@@ -1,15 +1,9 @@
 # Translation Report
 
-Total records with translation issues: 0
-Total suspicious untranslated issues: 8
+Total records with missing Tamil translation: 0
+Total suspicious translation issues: 2
 
-## Suspicious untranslated fields
-- ID 8: optionAEn same as optionATa
-- ID 8: optionBEn same as optionBTa
-- ID 8: optionCEn same as optionCTa
-- ID 8: optionDEn same as optionDTa
-- ID 9: optionAEn same as optionATa
-- ID 9: optionBEn same as optionBTa
-- ID 9: optionCEn same as optionCTa
-- ID 9: optionDEn same as optionDTa
+## Suspicious translations
+- ID 8: optionAEn same as optionATa, optionBEn same as optionBTa, optionCEn same as optionCTa, optionDEn same as optionDTa
+- ID 9: optionAEn same as optionATa, optionBEn same as optionBTa, optionCEn same as optionCTa, optionDEn same as optionDTa
 
