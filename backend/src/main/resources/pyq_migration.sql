@@ -1,0 +1,28 @@
+ALTER TABLE questions
+ADD COLUMN IF NOT EXISTS repeat_count INTEGER DEFAULT 0;
+
+ALTER TABLE questions
+ADD COLUMN IF NOT EXISTS appeared_years TEXT;
+
+ALTER TABLE questions
+ADD COLUMN IF NOT EXISTS appeared_exams TEXT;
+
+ALTER TABLE questions
+ADD COLUMN IF NOT EXISTS first_appeared_year INTEGER;
+
+ALTER TABLE questions
+ADD COLUMN IF NOT EXISTS last_appeared_year INTEGER;
+
+ALTER TABLE questions
+ADD COLUMN IF NOT EXISTS priority_level VARCHAR(20) DEFAULT 'NORMAL';
+
+ALTER TABLE questions
+ADD COLUMN IF NOT EXISTS difficulty VARCHAR(20) DEFAULT 'MEDIUM';
+
+CREATE TABLE IF NOT EXISTS pyq_appearances (
+    id SERIAL PRIMARY KEY,
+    question_id BIGINT NOT NULL,
+    exam_name VARCHAR(255),
+    exam_year INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

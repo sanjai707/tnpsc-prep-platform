@@ -58,6 +58,27 @@ public class Question {
     @Column(name = "explanation_ta", columnDefinition = "text")
     private String explanationTa;
 
+    @Column(name = "repeat_count")
+    private Integer repeatCount = 0;
+
+    @Column(name = "appeared_years")
+    private String appearedYears;
+
+    @Column(name = "appeared_exams")
+    private String appearedExams;
+
+    @Column(name = "first_appeared_year")
+    private Integer firstAppearedYear;
+
+    @Column(name = "last_appeared_year")
+    private Integer lastAppearedYear;
+
+    @Column(name = "priority_level")
+    private String priorityLevel = "NORMAL";
+
+    @Column(name = "difficulty")
+    private String difficulty = "MEDIUM";
+
     public Question() {
     }
 
@@ -205,5 +226,61 @@ public class Question {
 
     public void setExplanationTa(String explanationTa) {
         this.explanationTa = explanationTa;
+    }
+
+    public Integer getRepeatCount() {
+        return repeatCount;
+    }
+
+    public void setRepeatCount(Integer repeatCount) {
+        this.repeatCount = repeatCount;
+    }
+
+    public String getAppearedYears() {
+        return appearedYears;
+    }
+
+    public void setAppearedYears(String appearedYears) {
+        this.appearedYears = appearedYears;
+    }
+
+    public String getAppearedExams() {
+        return appearedExams;
+    }
+
+    public void setAppearedExams(String appearedExams) {
+        this.appearedExams = appearedExams;
+    }
+
+    public Integer getFirstAppearedYear() {
+        return firstAppearedYear;
+    }
+
+    public void setFirstAppearedYear(Integer firstAppearedYear) {
+        this.firstAppearedYear = firstAppearedYear;
+    }
+
+    public Integer getLastAppearedYear() {
+        return lastAppearedYear;
+    }
+
+    public void setLastAppearedYear(Integer lastAppearedYear) {
+        this.lastAppearedYear = lastAppearedYear;
+    }
+
+    public String getPriorityLevel() {
+        return priorityLevel;
+    }
+
+    public void setPriorityLevel(String priorityLevel) {
+        this.priorityLevel = priorityLevel;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
     }
 }
