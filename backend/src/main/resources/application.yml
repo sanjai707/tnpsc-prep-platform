@@ -6,7 +6,7 @@ spring:
     allow-circular-references: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/tnpsc_app
+    url: jdbc:postgresql://host.docker.internal:5432/tnpsc_app
     username: tnpsc_user
     password: tnpsc_password
   jpa:
